@@ -64,7 +64,7 @@ int main(void)
   while (1)
   {
 	  /* Periodic transmission of information about DMA Rx buffer state.
-	   * Transmission frequency - 5Hz.
+	   * Transmission frequency - 5Hz. (Staci raz za sekundu)
 	   * Message format - "Buffer capacity: %d bytes, occupied memory: %d bytes, load [in %]: %f%"
 	   * Example message (what I wish to see in terminal) - Buffer capacity: 1000 bytes, occupied memory: 231 bytes, load [in %]: 23.1%
 	   */
