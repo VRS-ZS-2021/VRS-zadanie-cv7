@@ -1,0 +1,14 @@
+core_cm4.h:1626:22:NVIC_EnableIRQ	16	static
+core_cm4.h:1698:22:NVIC_SetPriority	16	static
+stm32f3xx_ll_dma.h:506:22:LL_DMA_EnableChannel	16	static
+stm32f3xx_ll_dma.h:932:22:LL_DMA_SetDataLength	24	static
+stm32f3xx_ll_dma.h:1017:22:LL_DMA_SetMemoryAddress	24	static
+stm32f3xx_ll_dma.h:1814:22:LL_DMA_EnableIT_TC	16	static
+stm32f3xx_ll_bus.h:303:22:LL_AHB1_GRP1_EnableClock	24	static
+stm32f3xx_ll_bus.h:553:22:LL_APB1_GRP1_EnableClock	24	static
+stm32f3xx_ll_usart.h:2262:22:LL_USART_ConfigAsyncMode	16	static
+stm32f3xx_ll_usart.h:3191:22:LL_USART_DisableIT_CTS	16	static
+usart.c:30:6:USART2_RegisterCallback	16	static
+usart.c:44:6:MX_USART2_UART_Init	64	static
+usart.c:104:6:USART2_PutBuffer	16	static
+usart.c:122:6:USART2_CheckDmaReception	4	static
