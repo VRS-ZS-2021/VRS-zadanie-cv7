@@ -23,6 +23,8 @@
 #include "dma.h"
 #include "usart.h"
 #include "gpio.h"
+#include "string.h"
+#include "stdio.h"
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
@@ -39,7 +41,8 @@ void proccesDmaData(uint8_t sign);
 /* Space for your global variables. */
 
 	// type your global variables here:
-
+char actual_data_buffer[50];
+char data_to_send[100];
 
 int main(void)
 {
@@ -60,6 +63,10 @@ int main(void)
   /* Space for your local variables, callback registration ...*/
 
   	  //type your code here:
+  USART2_RegisterCallback(proccesDmaData);
+
+  //clearing buffers
+  strcpy(actual_data_buffer,"");
 
   while (1)
   {
@@ -68,8 +75,15 @@ int main(void)
 	   * Message format - "Buffer capacity: %d bytes, occupied memory: %d bytes, load [in %]: %f%"
 	   * Example message (what I wish to see in terminal) - Buffer capacity: 1000 bytes, occupied memory: 231 bytes, load [in %]: 23.1%
 	   */
-
   	  	  	  //type your code here:
+
+
+	  uint16_t buffer_state = getBufferState();
+	  float buffer_percentage = (float) (buffer_state) / (float) (DMA_USART2_BUFFER_SIZE)*100;
+	  sprintf(data_to_send, "Buffer capacity: %d bytes, occupied memory: %d bytes, load [in \%]:%.2f%%\r\n", DMA_USART2_BUFFER_SIZE, buffer_state, buffer_percentage);
+
+	  USART2_PutBuffer(data_to_send, sizeof(data_to_send));
+	  LL_mDelay(1000);
   }
   /* USER CODE END 3 */
 }
@@ -114,6 +128,13 @@ void proccesDmaData(uint8_t sign)
 	/* Process received data */
 
 		// type your algorithm here:
+	if(sign == '\r') return;
+
+	char tmp_string[2];
+	tmp_string[0] = sign;
+	tmp_string[1] = '\0';
+	strcat(actual_data_buffer,tmp_string);
+	actual_data_buffer[strlen(actual_data_buffer)] = '\0';
 }
 
 
