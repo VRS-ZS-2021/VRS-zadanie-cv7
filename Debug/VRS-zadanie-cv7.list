@@ -3347,11 +3347,11 @@ int main(void)
  80019a4:	4b17      	ldr	r3, [pc, #92]	; (8001a04 <main+0x90>)
  80019a6:	2200      	movs	r2, #0
  80019a8:	701a      	strb	r2, [r3, #0]
-	   * Example message (what I wish to see in terminal) - Buffer capacity: 1000 bytes, occupied memory: 231 bytes, load [in %]: 23.1%
 	   */
   	  	  	  //type your code here:
 
 
+	  //Sending info about buffer capacity status
 	  uint16_t buffer_state = getBufferState();
  80019aa:	f000 fe0b 	bl	80025c4 <getBufferState>
  80019ae:	4603      	mov	r3, r0
@@ -3365,7 +3365,7 @@ int main(void)
  80019c4:	ed9f 7a11 	vldr	s14, [pc, #68]	; 8001a0c <main+0x98>
  80019c8:	ee67 7a87 	vmul.f32	s15, s15, s14
  80019cc:	edc7 7a00 	vstr	s15, [r7]
-	  sprintf(data_to_send, "Buffer capacity: %d bytes, occupied memory: %d bytes, load [in \%]:%.2f%%\r\n", DMA_USART2_BUFFER_SIZE, buffer_state, buffer_percentage);
+	  sprintf(data_to_send, "Buffer capacity: %d bytes, occupied memory: %d bytes, load [in %%]:%.2f%%\r\n", DMA_USART2_BUFFER_SIZE, buffer_state, buffer_percentage);
  80019d0:	88fc      	ldrh	r4, [r7, #6]
  80019d2:	6838      	ldr	r0, [r7, #0]
  80019d4:	f7fe fdb8 	bl	8000548 <__aeabi_f2d>
@@ -3378,7 +3378,7 @@ int main(void)
  80019e8:	480a      	ldr	r0, [pc, #40]	; (8001a14 <main+0xa0>)
  80019ea:	f001 fe07 	bl	80035fc <siprintf>
 
-	  USART2_PutBuffer(data_to_send, sizeof(data_to_send));
+	  USART2_PutBuffer((uint8_t *) data_to_send, sizeof(data_to_send));
  80019ee:	2164      	movs	r1, #100	; 0x64
  80019f0:	4808      	ldr	r0, [pc, #32]	; (8001a14 <main+0xa0>)
  80019f2:	f000 fed5 	bl	80027a0 <USART2_PutBuffer>
@@ -5772,7 +5772,7 @@ void USART2_CheckDmaReception(void)
  80027fa:	f5c3 7380 	rsb	r3, r3, #256	; 0x100
  80027fe:	80bb      	strh	r3, [r7, #4]
 
-	for (uint16_t i = old_pos; i < pos; i++) { //reading from buffer
+	for (uint16_t i = old_pos; i < pos; i++) { //reading from buffer from old_pos to pos, sending each char to callback function
  8002800:	4b0e      	ldr	r3, [pc, #56]	; (800283c <USART2_CheckDmaReception+0x5c>)
  8002802:	881b      	ldrh	r3, [r3, #0]
  8002804:	80fb      	strh	r3, [r7, #6]
@@ -5785,7 +5785,7 @@ void USART2_CheckDmaReception(void)
  8002810:	5c8a      	ldrb	r2, [r1, r2]
  8002812:	4610      	mov	r0, r2
  8002814:	4798      	blx	r3
-	for (uint16_t i = old_pos; i < pos; i++) { //reading from buffer
+	for (uint16_t i = old_pos; i < pos; i++) { //reading from buffer from old_pos to pos, sending each char to callback function
  8002816:	88fb      	ldrh	r3, [r7, #6]
  8002818:	3301      	adds	r3, #1
  800281a:	80fb      	strh	r3, [r7, #6]

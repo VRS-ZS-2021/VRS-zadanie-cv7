@@ -155,7 +155,7 @@ void USART2_PutBuffer(uint8_t *buffer, uint8_t length)
 }
 
 
-/*ahoj
+/*
  *	Function processing data received via USART2 with DMA and stored in bufferUSART2dma.
  *	Forwards data to callback function.
  *	Keeps track of pointer pointing to Rx memory buffer and resets the pointer if overflow is possible in next Rx.
@@ -168,7 +168,7 @@ void USART2_CheckDmaReception(void)
 
 	uint16_t pos = DMA_USART2_BUFFER_SIZE - LL_DMA_GetDataLength(DMA1, LL_DMA_CHANNEL_6);
 
-	for (uint16_t i = old_pos; i < pos; i++) { //reading from buffer
+	for (uint16_t i = old_pos; i < pos; i++) { //reading from buffer from old_pos to pos, sending each char to callback function
 		USART2_ProcessData(bufferUSART2dma[i]);
 	}
 

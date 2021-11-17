@@ -41,7 +41,7 @@ void proccesDmaData(uint8_t sign);
 /* Space for your global variables. */
 
 	// type your global variables here:
-char actual_data_buffer[50];
+char actual_data_buffer[256];
 char data_to_send[100];
 
 int main(void)
@@ -78,11 +78,12 @@ int main(void)
   	  	  	  //type your code here:
 
 
+	  //Sending info about buffer capacity status
 	  uint16_t buffer_state = getBufferState();
 	  float buffer_percentage = (float) (buffer_state) / (float) (DMA_USART2_BUFFER_SIZE)*100;
-	  sprintf(data_to_send, "Buffer capacity: %d bytes, occupied memory: %d bytes, load [in \%]:%.2f%%\r\n", DMA_USART2_BUFFER_SIZE, buffer_state, buffer_percentage);
+	  sprintf(data_to_send, "Buffer capacity: %d bytes, occupied memory: %d bytes, load [in %%]:%.2f%%\r\n", DMA_USART2_BUFFER_SIZE, buffer_state, buffer_percentage);
 
-	  USART2_PutBuffer(data_to_send, sizeof(data_to_send));
+	  USART2_PutBuffer((uint8_t *) data_to_send, sizeof(data_to_send));
 	  LL_mDelay(1000);
   }
   /* USER CODE END 3 */
@@ -128,8 +129,10 @@ void proccesDmaData(uint8_t sign)
 	/* Process received data */
 
 		// type your algorithm here:
-	if(sign == '\r') return;
 
+	if(sign == '\r') return; //filtering endline character from PuTTY
+
+	//Appending new character to "actual_data_buffer"
 	char tmp_string[2];
 	tmp_string[0] = sign;
 	tmp_string[1] = '\0';
