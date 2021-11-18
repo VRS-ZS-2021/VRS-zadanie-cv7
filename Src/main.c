@@ -43,6 +43,7 @@ void proccesDmaData(uint8_t sign);
 	// type your global variables here:
 char actual_data_buffer[256];
 char data_to_send[100];
+uint8_t allow = 0, lowercase_char = 0, uppercase_char = 0,calculate_sign = 0;
 
 int main(void)
 {
@@ -129,15 +130,44 @@ void proccesDmaData(uint8_t sign)
 	/* Process received data */
 
 		// type your algorithm here:
-
+	char data_number_to_send[100];
 	if(sign == '\r') return; //filtering endline character from PuTTY
 
 	//Appending new character to "actual_data_buffer"
-	char tmp_string[2];
-	tmp_string[0] = sign;
-	tmp_string[1] = '\0';
-	strcat(actual_data_buffer,tmp_string);
-	actual_data_buffer[strlen(actual_data_buffer)] = '\0';
+//	char tmp_string[2];
+//	tmp_string[0] = sign;
+//	tmp_string[1] = '\0';
+//	strcat(actual_data_buffer,tmp_string);
+//	actual_data_buffer[strlen(actual_data_buffer)] = '\0';
+
+	if(sign == '#' && allow == 0){ //zapneme povolenie pre citanie znakov, startovaci znak je prijaty len raz
+		allow = 1;
+		calculate_sign = 0;
+		lowercase_char = 0;
+		uppercase_char = 0;
+	}
+	if(sign == '$' && allow == 1){ // po prijati ukoncovacieho znaku vypneme povolenie a vypiseme data
+		allow = 0;
+		sprintf(data_number_to_send, "Number of lowercase characters: %d , Number of uppercase characters: %d", lowercase_char,uppercase_char);
+		USART2_PutBuffer((uint8_t *) data_number_to_send, sizeof(data_number_to_send));
+	}
+	if(calculate_sign > 35){//ak sme prekrocili pocet znakov o 35, prestaneme znaky ratat a zahodime data
+		allow = 0;
+		calculate_sign = 0;
+		lowercase_char = 0;
+		uppercase_char = 0;
+	}
+	if (allow == 1){//ratanie malych/velkych pismen
+		calculate_sign++;
+		if(sign >= 'a' && sign <= 'z'){
+			lowercase_char++;
+		}
+		if(sign >= 'A' && sign <= 'Z'){
+			uppercase_char++;
+		}
+
+	}
+
 }
 
 
