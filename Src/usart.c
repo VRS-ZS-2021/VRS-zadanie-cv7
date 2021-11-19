@@ -46,6 +46,19 @@ uint16_t getBufferState() {
 	return old_pos;
 }
 
+void reinitializeBuffer() {
+	memset(bufferUSART2dma,0,DMA_USART2_BUFFER_SIZE); //set buffer memory to zeros
+	LL_DMA_DisableChannel(DMA1, LL_DMA_CHANNEL_6);  //disabling DMA channel
+	LL_DMA_ConfigAddresses(DMA1, LL_DMA_CHANNEL_6,  //reconfiguring DMA
+	 						 	LL_USART_DMA_GetRegAddr(USART2, LL_USART_DMA_REG_DATA_RECEIVE),
+	 							(uint32_t)bufferUSART2dma,
+	 							LL_DMA_GetDataTransferDirection(DMA1, LL_DMA_CHANNEL_6));
+	LL_DMA_SetDataLength(DMA1, LL_DMA_CHANNEL_6, DMA_USART2_BUFFER_SIZE);
+	LL_DMA_EnableChannel(DMA1, LL_DMA_CHANNEL_6);
+	LL_USART_EnableDMAReq_RX(USART2);
+	old_pos = 0; //set last reading position to start of buffer
+}
+
 /* USART2 init function */
 void MX_USART2_UART_Init(void)
 {
@@ -166,6 +179,7 @@ void USART2_CheckDmaReception(void)
 	//type your implementation here
 	if(USART2_ProcessData == 0) return;
 
+	uint16_t test = LL_DMA_GetDataLength(DMA1, LL_DMA_CHANNEL_6);
 	uint16_t pos = DMA_USART2_BUFFER_SIZE - LL_DMA_GetDataLength(DMA1, LL_DMA_CHANNEL_6);
 
 	for (uint16_t i = old_pos; i < pos; i++) { //reading from buffer from old_pos to pos, sending each char to callback function
@@ -173,6 +187,10 @@ void USART2_CheckDmaReception(void)
 	}
 
 	old_pos = pos;
+
+	if(LL_DMA_GetDataLength(DMA1, LL_DMA_CHANNEL_6) <= 20) { //if remaining buffer capacity is less than 20 characters
+		reinitializeBuffer();
+	}
 }
 
 

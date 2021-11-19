@@ -84,7 +84,7 @@ int main(void)
 	  float buffer_percentage = (float) (buffer_state) / (float) (DMA_USART2_BUFFER_SIZE)*100;
 	  sprintf(data_to_send, "Buffer capacity: %d bytes, occupied memory: %d bytes, load [in %%]:%.2f%%\r\n", DMA_USART2_BUFFER_SIZE, buffer_state, buffer_percentage);
 
-	  USART2_PutBuffer((uint8_t *) data_to_send, sizeof(data_to_send));
+	  USART2_PutBuffer((uint8_t *) data_to_send, strlen(data_to_send));
 	  LL_mDelay(1000);
   }
   /* USER CODE END 3 */
@@ -148,8 +148,8 @@ void proccesDmaData(uint8_t sign)
 	}
 	if(sign == '$' && allow == 1){ // po prijati ukoncovacieho znaku vypneme povolenie a vypiseme data
 		allow = 0;
-		sprintf(data_number_to_send, "Number of lowercase characters: %d , Number of uppercase characters: %d", lowercase_char,uppercase_char);
-		USART2_PutBuffer((uint8_t *) data_number_to_send, sizeof(data_number_to_send));
+		sprintf(data_number_to_send, "Number of lowercase characters: %d , Number of uppercase characters: %d\r\n", lowercase_char,uppercase_char);
+		USART2_PutBuffer((uint8_t *) data_number_to_send, strlen(data_number_to_send));
 	}
 	if(calculate_sign > 35){//ak sme prekrocili pocet znakov o 35, prestaneme znaky ratat a zahodime data
 		allow = 0;
